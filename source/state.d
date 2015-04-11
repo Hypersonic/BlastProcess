@@ -1,12 +1,12 @@
-import gfm.sdl2;
+import derelict.sdl2.mixer;
 
 class State {
 	int width = 1000;
 	int height = 1000;
 
 	bool running = true;
-	SDL2 sdl2;
-	SDL2Renderer renderer;
+
+    Mix_Music* music;
 
 	Guy[] cars;
 	int laneWidth = 250;

@@ -4,6 +4,6 @@
 	"copyright": "Copyright © 2015, josh",
 	"authors": ["josh"],
 	"dependencies": {
-		"gfm:sdl2": "~>2.0.15",
+        "derelict-sdl2": "~>1.9.4"
 	}
 }

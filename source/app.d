@@ -1,7 +1,8 @@
 import std.stdio;
 import std.random;
 
-import gfm.sdl2;
+import derelict.sdl2.sdl;
+import derelict.sdl2.mixer;
 
 import state;
 
@@ -12,7 +13,6 @@ void main()
 
 	// state loop
 	while (state.running) {
-		state.sdl2.processEvents();
 
 		checkKeys(state);
 		update(state);
@@ -24,17 +24,23 @@ void main()
 }
 
 void checkKeys(ref State state) {
-	if (state.sdl2.keyboard().isPressed(SDLK_q))
-		state.running = false;
 }
 
 void init(ref State state) {
-	state.sdl2 = new SDL2(null);
-	auto window = new SDL2Window(state.sdl2,
-		SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-		state.width, state.height,
-		SDL_WINDOW_SHOWN);
-	state.renderer = new SDL2Renderer(window);
+    DerelictSDL2.load();
+    DerelictSDL2Mixer.load();
+
+    // Audio initialization 
+    if (Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 ) < 0) {
+        writefln( "SDL_mixer could not initialize! SDL_mixer Error: %s", Mix_GetError() );
+    }
+    state.music = Mix_LoadMUS("res/dragster-5k-047.mp3");
+
+    if (!state.music) {
+        writefln("Mix_LoadMUS(\"res/dragster-5k-047.mp3\"): %s", Mix_GetError());
+    }
+
+    Mix_PlayMusic(state.music, 10);
 
 	for (int i = 0; i < 40; i++) {
 		int lane = cast(int)(uniform01() * 6);
@@ -64,22 +70,4 @@ void update(ref State state) {
 }
 
 void render(ref State state) {
-	auto renderer = state.renderer;
-	renderer.setColor(0, 0, 0);
-	renderer.clear();
-
-	// roads ???
-	renderer.setColor(80, 80, 80);
-	renderer.fillRect(175, 0, state.laneWidth, state.height);
-	renderer.fillRect(575, 0, state.laneWidth, state.height);
-
-	// where we're going we don't need roads
-	renderer.setColor(200, 200, 200);
-	foreach (car; state.cars) {
-		renderer.fillRect(cast(int)car.x - car.w / 2,
-		                  cast(int)car.y - car.h / 2,
-		                  car.w, car.h);
-	}
-
-	renderer.present();
 }
