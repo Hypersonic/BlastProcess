@@ -1,15 +1,20 @@
-import gfm.sdl2;
+import derelict.sdl2.sdl;
 
 class State {
-	int width = 1000;
-	int height = 1000;
+	int width;
+	int height;
 
 	bool running = true;
-	SDL2 sdl2;
-	SDL2Renderer renderer;
+	SDL_Window *window;
+	SDL_GLContext context;
 
 	Guy[] cars;
 	int laneWidth = 250;
+
+	this(int w, int h) {
+		width = w;
+		height = h;
+	}
 };
 
 class Guy {

@@ -1,41 +1,89 @@
 import std.stdio;
 import std.random;
+import std.c.stdlib;
 
-import gfm.sdl2;
+import derelict.sdl2.sdl;
+import derelict.opengl3.gl;
 
 import state;
+import render_util;
 
 void main()
 {
-	State state = new State;
-	init(state);
+	writeln();
+	writeln("preparing to init");
+
+	State state = new State(1000, 1000);
+	if (!init(state)) {
+		cleanup(state);
+		exit(-1);
+	}
+
+	writeln("good init broskis");
 
 	// state loop
 	while (state.running) {
-		state.sdl2.processEvents();
+		// process inputs
+		SDL_Event e;
+		while (SDL_PollEvent(&e)) {
+			switch (e.type) {
+				case SDL_KEYDOWN:
+					keyboard(state, e, true);
+					break;
+				case SDL_QUIT:
+					state.running = false;
+					break;
+				default:
+					break;
+			}
+		}
 
 		checkKeys(state);
 		update(state);
 		render(state);
 	}
 
+	cleanup(state);
+
 	// ciao!
 	writeln("quitting; goodbye");
 }
 
 void checkKeys(ref State state) {
+	/* TODO
 	if (state.sdl2.keyboard().isPressed(SDLK_q))
 		state.running = false;
+	*/
 }
 
-void init(ref State state) {
-	// init sdl2, etc.
-	state.sdl2 = new SDL2(null);
-	auto window = new SDL2Window(state.sdl2,
-		SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+bool init(ref State state) {
+	// init sdl2, opengl
+	DerelictSDL2.load();
+	DerelictGL.load();
+
+	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+		writeln("error intializing sdl");
+		return false;
+	}
+
+	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+
+	state.window = SDL_CreateWindow("Blast Process",
+		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
 		state.width, state.height,
-		SDL_WINDOW_SHOWN);
-	state.renderer = new SDL2Renderer(window);
+		SDL_WINDOW_OPENGL | SDL_WINDOW_BORDERLESS);
+	if (!state.window) {
+		writeln("window couldn't create");
+		return false;
+	}
+
+	state.context = SDL_GL_CreateContext(state.window);
+	SDL_GL_SetSwapInterval(1);
+
+	glClearColor(0, 0, 0, 0);
+	glViewport(0, 0, state.width, state.height);
+
+	DerelictGL.reload();
 
 	// populate left lane
 	for (int i = 0; i < 40; i++) {
@@ -50,6 +98,8 @@ void init(ref State state) {
 		state.cars ~= new Guy(575 + (1/12. + lane / 6.) * state.laneWidth,
 		                      uniform01() * state.height, 1, 1, 1);
 	}
+
+	return true;
 }
 
 void update(ref State state) {
@@ -67,22 +117,28 @@ void update(ref State state) {
 }
 
 void render(ref State state) {
-	auto renderer = state.renderer;
-	renderer.setColor(0, 0, 0);
-	renderer.clear();
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// roads ???
-	renderer.setColor(80, 80, 80);
-	renderer.fillRect(175, 0, state.laneWidth, state.height);
-	renderer.fillRect(575, 0, state.laneWidth, state.height);
+	glColor3f(0.3, 0.3, 0.3);
+	fillRect(175, 0, state.laneWidth, state.height);
+	fillRect(575, 0, state.laneWidth, state.height);
 
 	// where we're going we don't need roads
-	renderer.setColor(200, 200, 200);
+	glColor3f(0.75, 0.75, 0.75);
 	foreach (car; state.cars) {
-		renderer.fillRect(cast(int)car.x - car.w / 2,
-		                  cast(int)car.y - car.h / 2,
-		                  car.w, car.h);
+		fillRect(cast(int)car.x - car.w / 2, cast(int)car.y - car.h / 2,
+		         car.w, car.h);
 	}
 
-	renderer.present();
+	// TODO show to screen
+}
+
+void keyboard(ref State state, ref SDL_Event e, bool keydown) {
+}
+
+void cleanup(ref State state) {
+	SDL_GL_DeleteContext(state.context);
+	SDL_DestroyWindow(state.window);
+	SDL_Quit();
 }
