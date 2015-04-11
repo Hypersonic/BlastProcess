@@ -49,6 +49,8 @@ void main()
 
 		state.updateFuncs[state.sceneIndex](state);
 		state.renderFuncs[state.sceneIndex](state);
+
+		state.t++;
 		sw.stop();
 
 		auto len = sw.peek().length;

@@ -1,3 +1,4 @@
+import std.conv;
 import std.math;
 import std.random;
 import std.conv;
@@ -8,6 +9,8 @@ import derelict.opengl3.gl;
 
 import state;
 import render_util;
+
+int TICK_INTERVAL = 25;
 
 void init(ref State state) {
 	// populate left lane
@@ -39,8 +42,11 @@ void update(ref State state) {
 		}
 	}
 
-    // Increment t
-	state.t++;
+	// extend the rainbow road every TICK_INTERVAL ticks
+    if (state.t > 588 && (state.t - 542) % TICK_INTERVAL == 0) {
+        state.rainbowRoad ~= [uniform(0, state.width),
+                              uniform(0, state.height)];
+    }
 }
 
 void render(ref State state) {
@@ -72,12 +78,8 @@ void render(ref State state) {
 	foreach (car; state.cars) {
 		fillRect(cast(int)car.x, cast(int)car.y, car.w, car.h);
 	}
-
-    if (state.t > 600 && state.t % state.TICK_LEN / 2 == 0) {
-        state.rainbowRoad ~= [uniform(0, state.width),
-                              uniform(0, state.height)];
-    }
     
+    // draw the rainbow road
     if (state.rainbowRoad.length > 1) {
         glLineWidth(10.0);
         import std.range;
