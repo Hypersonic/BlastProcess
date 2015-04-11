@@ -58,8 +58,7 @@ void update(ref State state) {
             rainbowRoad ~=
                 [175 + (state.t%2 * laneWidth/2).to!int
                      + uniform(0, laneWidth/2),
-                rainbowRoad[$-1][1]
-                     + uniform(state.height/8, state.height/4)];
+                rainbowRoad[$-1][1] + state.height/ (RAINBOW_ROAD_MAXLEN-1)];
     	}
     }
 }
