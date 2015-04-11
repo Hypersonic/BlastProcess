@@ -40,13 +40,27 @@ void init(ref State state) {
 		int lane = cast(int)(uniform01() * 6);
 		state.cars ~= new Guy(175 + (1/12. + lane / 6.) * state.laneWidth,
 		                      uniform01() * state.height, 1, 1, 1);
-		lane = cast(int)(uniform01() * 6);
+	}
+
+	for (int i = 0; i < 40; i++) {
+		int lane = cast(int)(uniform01() * 6);
 		state.cars ~= new Guy(575 + (1/12. + lane / 6.) * state.laneWidth,
 		                      uniform01() * state.height, 1, 1, 1);
 	}
 }
 
 void update(ref State state) {
+	foreach (i,car; state.cars) {
+		if (i < state.cars.length / 2) {
+			car.y += 0.4;
+			if (car.y > state.height + car.h / 2)
+				car.y = -car.h / 2;
+		} else {
+			car.y -= 0.4;
+			if (car.y < -car.h / 2)
+				car.y = state.height + car.h / 2;
+		}
+	}
 }
 
 void render(ref State state) {
