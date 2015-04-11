@@ -18,7 +18,7 @@ class State {
 
     int[2][] rainbowRoad;
 
-	ulong TICK_LEN = 20; // length of a tick (x msecs)
+	ulong TICK_LEN = 30; // length of a tick (x msecs)
 	ulong t = 0;
 
 	int sceneIndex = -1;

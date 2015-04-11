@@ -28,6 +28,9 @@ void main()
 	writeln("good init broskis");
 	StopWatch sw;
 
+    // start music to avoid random offsets
+    Mix_PlayMusic(state.music, 10);
+
 	// state loop
 	while (state.running) {
 		sw.reset();
@@ -91,8 +94,6 @@ bool initAudio(ref State state) {
         writefln("Mix_LoadMUS(\"res/dragster-5k-047.mp3\"): %s", Mix_GetError());
         return false;
     }
-
-    Mix_PlayMusic(state.music, 10);
 
     return true;
 }

@@ -10,7 +10,8 @@ import derelict.opengl3.gl;
 import state;
 import render_util;
 
-int TICK_INTERVAL = 25;
+int TAP_START_TICK = 580;
+int TAP_INTERVAL = 26;
 
 void init(ref State state) {
 	// populate left lane
@@ -43,7 +44,7 @@ void update(ref State state) {
 	}
 
 	// extend the rainbow road every TICK_INTERVAL ticks
-    if (state.t > 588 && (state.t - 542) % TICK_INTERVAL == 0) {
+    if (state.t > TAP_START_TICK && (state.t - TAP_START_TICK) % TAP_INTERVAL == 0) {
         state.rainbowRoad ~= [uniform(0, state.width),
                               uniform(0, state.height)];
     }
