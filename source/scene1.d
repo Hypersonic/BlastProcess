@@ -88,16 +88,16 @@ void render(ref State state) {
         glBegin(GL_LINES); {
             foreach (first, second; lockstep(state.rainbowRoad[0 .. $-1], state.rainbowRoad[1 .. $])) {
                 glColor3f(1.0, 0.0, 0.0);
-                glVertex3f(first[0].to!float, first[1].to!float - 10, 0f);
-                glVertex3f(second[0].to!float, second[1].to!float - 10, 0f);
+                glVertex3f(first[0].to!float - 10, first[1].to!float, 0f);
+                glVertex3f(second[0].to!float - 10, second[1].to!float, 0f);
 
                 glColor3f(0.0, 1.0, 0.0);
                 glVertex3f(first[0].to!float, first[1].to!float, 0f);
                 glVertex3f(second[0].to!float, second[1].to!float, 0f);
 
                 glColor3f(0.0, 0.0, 1.0);
-                glVertex3f(first[0].to!float, first[1].to!float + 10, 0f);
-                glVertex3f(second[0].to!float, second[1].to!float + 10, 0f);
+                glVertex3f(first[0].to!float + 10, first[1].to!float, 0f);
+                glVertex3f(second[0].to!float + 10, second[1].to!float, 0f);
             }
         } glEnd();
     }
