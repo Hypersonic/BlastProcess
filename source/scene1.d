@@ -10,20 +10,27 @@ import derelict.opengl3.gl;
 import state;
 import render_util;
 
-int TICK_INTERVAL = 25;
+int TAP_START_TICK = 606;
+int TAP_INTERVAL = 26;
+int RAINBOW_ROAD_MAXLEN = 9;
+
+Guy[] cars;
+int laneWidth = 250;
+
+int[2][] rainbowRoad;
 
 void init(ref State state) {
 	// populate left lane
 	for (int i = 0; i < 40; i++) {
 		int lane = cast(int)(uniform01() * 6);
-		state.cars ~= new Guy(175 + (1 + lane) / 7. * state.laneWidth,
+		cars ~= new Guy(175 + (1 + lane) / 7. * laneWidth,
 		                      uniform01() * state.height, 1, 1, 1);
 	}
 
 	// populate right lane
 	for (int i = 0; i < 40; i++) {
 		int lane = cast(int)(uniform01() * 6);
-		state.cars ~= new Guy(575 + (1 + lane) / 7. * state.laneWidth,
+		cars ~= new Guy(575 + (1 + lane) / 7. * laneWidth,
 		                      uniform01() * state.height, 1, 1, 1);
 	}
 
@@ -32,8 +39,8 @@ void init(ref State state) {
 
 void update(ref State state) {
 	// moven de cars arong rodd
-	foreach (i,car; state.cars) {
-		if (i < state.cars.length / 2) {
+	foreach (i,car; cars) {
+		if (i < cars.length / 2) {
 			car.y += 0.4;
 			if (car.y > state.height + car.h / 2)
 				car.y = -car.h / 2;
@@ -45,9 +52,15 @@ void update(ref State state) {
 	}
 
 	// extend the rainbow road every TICK_INTERVAL ticks
-    if (state.t > 588 && (state.t - 542) % TICK_INTERVAL == 0) {
-        state.rainbowRoad ~= [175 + (state.t%2 * state.laneWidth/2).to!int + uniform(0, state.laneWidth/2),
-                              state.rainbowRoad[$-1][1] + uniform(state.height/8, state.height/4)];
+    if (rainbowRoad.length < RAINBOW_ROAD_MAXLEN) {
+    	if (state.t > TAP_START_TICK &&
+    		(state.t - TAP_START_TICK) % TAP_INTERVAL == 0) {
+            state.rainbowRoad ~=
+                [175 + (state.t%2 * state.laneWidth/2).to!int
+                     + uniform(0, state.laneWidth/2),
+                state.rainbowRoad[$-1][1]
+                     + uniform(state.height/8, state.height/4)];
+    	}
     }
 }
 
@@ -72,21 +85,21 @@ void render(ref State state) {
 
 	// roads ???
 	glColor3f(0.3, 0.3, 0.3);
-	fillRect(300, 500, state.laneWidth, state.height);
-	fillRect(700, 500, state.laneWidth, state.height);
+	fillRect(300, 500, laneWidth, state.height);
+	fillRect(700, 500, laneWidth, state.height);
 
 	// where we're going we don't need roads
 	glColor3f(0.75, 0.75, 0.75);
-	foreach (car; state.cars) {
+	foreach (car; cars) {
 		fillRect(cast(int)car.x, cast(int)car.y, car.w, car.h);
 	}
     
     // draw the rainbow road
-    if (state.rainbowRoad.length > 1) {
+    if (rainbowRoad.length > 1) {
         glLineWidth(10.0);
         import std.range;
         glBegin(GL_LINES); {
-            foreach (first, second; lockstep(state.rainbowRoad[0 .. $-1], state.rainbowRoad[1 .. $])) {
+            foreach (first, second; lockstep(rainbowRoad[0 .. $-1], rainbowRoad[1 .. $])) {
                 glColor3f(1.0, 0.0, 0.0);
                 glVertex3f(first[0].to!float - 10, first[1].to!float, 0f);
                 glVertex3f(second[0].to!float - 10, second[1].to!float, 0f);
