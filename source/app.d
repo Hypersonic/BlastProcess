@@ -22,6 +22,8 @@ void main()
 		state.sdl2.processEvents();
 
 		checkKeys(state);
+		update();
+		render();
 	}
 
 	// ciao!
@@ -31,4 +33,10 @@ void main()
 void checkKeys(ref State state) {
 	if (state.sdl2.keyboard().isPressed(SDLK_q))
 		state.running = false;
+}
+
+void update(ref State state) {
+}
+
+void render(ref State state) {
 }
