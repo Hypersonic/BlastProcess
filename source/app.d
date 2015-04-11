@@ -42,12 +42,14 @@ void init(ref State state) {
 
     Mix_PlayMusic(state.music, 10);
 
+	// populate left lane
 	for (int i = 0; i < 40; i++) {
 		int lane = cast(int)(uniform01() * 6);
 		state.cars ~= new Guy(175 + (1/12. + lane / 6.) * state.laneWidth,
 		                      uniform01() * state.height, 1, 1, 1);
 	}
 
+	// populate right lane
 	for (int i = 0; i < 40; i++) {
 		int lane = cast(int)(uniform01() * 6);
 		state.cars ~= new Guy(575 + (1/12. + lane / 6.) * state.laneWidth,
