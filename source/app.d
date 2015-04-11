@@ -10,7 +10,7 @@ import derelict.sdl2.mixer;
 import derelict.opengl3.gl;
 
 import state;
-import scene1;
+static import scene1;
 import render_util;
 
 void main()
@@ -135,12 +135,6 @@ bool nextScene(ref State state) {
 
 	state.initFuncs[++state.sceneIndex](state);
 	return true;
-}
-
-auto clamp(T, U, V)(T val, U lower, V upper) {
-    if (val < lower) return lower;
-    if (val >= upper) return upper;
-    return val;
 }
 
 void keyboard(ref State state, ref SDL_Event e, bool keydown) {

@@ -1,5 +1,6 @@
 import std.math;
 import std.random;
+import std.conv;
 import std.algorithm.comparison;
 
 import derelict.sdl2.sdl;
