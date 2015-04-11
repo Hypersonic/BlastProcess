@@ -9,7 +9,7 @@ void main()
 	auto width  = 1000;
 	auto height = 1000;
 
-	State state;
+	State state = new State;
 	state.sdl2 = new SDL2(null);
 	auto window = new SDL2Window(state.sdl2,
 		SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
@@ -22,8 +22,8 @@ void main()
 		state.sdl2.processEvents();
 
 		checkKeys(state);
-		update();
-		render();
+		update(state);
+		render(state);
 	}
 
 	// ciao!
@@ -39,4 +39,11 @@ void update(ref State state) {
 }
 
 void render(ref State state) {
+	auto renderer = state.renderer;
+	renderer.setColor(0, 0, 0);
+	renderer.clear();
+
+	renderer.setColor(200, 200, 200);
+	renderer.fillRect(10, 10, 10, 10);
+	renderer.present();
 }

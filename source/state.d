@@ -1,6 +1,6 @@
 import gfm.sdl2;
 
-struct State {
+class State {
 	bool running = true;
 	SDL2 sdl2;
 	SDL2Renderer renderer;
