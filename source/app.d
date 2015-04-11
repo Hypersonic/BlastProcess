@@ -1,7 +1,10 @@
+import std.conv;
 import std.math;
 import std.stdio;
 import std.random;
+import std.datetime;
 import std.c.stdlib;
+import core.thread;
 
 import derelict.sdl2.sdl;
 import derelict.sdl2.mixer;
@@ -22,9 +25,12 @@ void main()
 	}
 
 	writeln("good init broskis");
+	StopWatch sw;
 
 	// state loop
 	while (state.running) {
+		sw.reset();
+		sw.start();
 		// process inputs
 		SDL_Event e;
 		while (SDL_PollEvent(&e)) {
@@ -42,6 +48,11 @@ void main()
 
 		update(state);
 		render(state);
+		sw.stop();
+
+		auto len = sw.peek().length;
+		if (len < state.TICK_LEN)
+			Thread.sleep(dur!("msecs")(state.TICK_LEN - sw.peek().length));
 	}
 
 	cleanup(state);

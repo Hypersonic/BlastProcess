@@ -15,6 +15,7 @@ class State {
 	Guy[] cars;
 	int laneWidth = 250;
 
+	ulong TICK_LEN = 20;
 	ulong t = 0;
 
 	this(int w, int h) {
