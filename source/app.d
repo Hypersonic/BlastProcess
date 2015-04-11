@@ -137,7 +137,7 @@ void render(ref State state) {
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	//glTranslatef(-state.width / 2, - state.height / 2, 0);
-	glScalef(2. / state.width, 2. / state.height, 1);
+	glScalef(2. / state.width, -2. / state.height, 1);
 	glTranslatef(-state.width / 2, -state.height / 2, 0);
 
 	// roads ???
