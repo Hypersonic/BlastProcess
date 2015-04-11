@@ -62,7 +62,9 @@ void render(ref State state) {
 	// where we're going we don't need roads
 	renderer.setColor(200, 200, 200);
 	foreach (car; state.cars) {
-		renderer.fillRect(cast(int)car.x - 5, cast(int)car.y - 5, 10, 10);
+		renderer.fillRect(cast(int)car.x - car.w / 2,
+		                  cast(int)car.y - car.h / 2,
+		                  car.w, car.h);
 	}
 
 	renderer.present();

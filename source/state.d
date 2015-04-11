@@ -16,6 +16,9 @@ class Guy {
 	double x, y;
 	double r, g, b;
 
+	int w = 10;
+	int h = 10;
+
 	this(double x, double y, double r, double g, double b) {
 		this.x = x;
 		this.y = y;
