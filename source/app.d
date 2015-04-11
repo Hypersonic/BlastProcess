@@ -135,17 +135,6 @@ bool initVisual(ref State state) {
 	return true;
 }
 
-bool nextScene(ref State state) {
-	// if there's no next scene, return
-	if (state.sceneIndex >= state.numScenes - 1) {
-		state.sceneIndex  = state.numScenes - 1;
-		return false;
-	}
-
-	state.initFuncs[++state.sceneIndex](state);
-	return true;
-}
-
 void keyboard(ref State state, ref SDL_Event e, bool keydown) {
 	switch (e.key.keysym.sym) {
 		case SDLK_q:

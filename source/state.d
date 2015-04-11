@@ -27,6 +27,17 @@ class State {
 	}
 };
 
+bool nextScene(ref State state) {
+	// if there's no next scene, return
+	if (state.sceneIndex >= state.numScenes - 1) {
+		state.sceneIndex  = state.numScenes - 1;
+		return false;
+	}
+
+	state.initFuncs[++state.sceneIndex](state);
+	return true;
+}
+
 class Guy {
 	double x, y;
 	double r, g, b;
