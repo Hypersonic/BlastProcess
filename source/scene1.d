@@ -34,7 +34,7 @@ void init(ref State state) {
 		                      uniform01() * state.height, 1, 1, 1);
 	}
 
-    state.rainbowRoad ~= [175 + state.laneWidth/2, 0];
+    rainbowRoad ~= [175 + laneWidth/2, 0];
 }
 
 void update(ref State state) {
@@ -55,10 +55,10 @@ void update(ref State state) {
     if (rainbowRoad.length < RAINBOW_ROAD_MAXLEN) {
     	if (state.t > TAP_START_TICK &&
     		(state.t - TAP_START_TICK) % TAP_INTERVAL == 0) {
-            state.rainbowRoad ~=
-                [175 + (state.t%2 * state.laneWidth/2).to!int
-                     + uniform(0, state.laneWidth/2),
-                state.rainbowRoad[$-1][1]
+            rainbowRoad ~=
+                [175 + (state.t%2 * laneWidth/2).to!int
+                     + uniform(0, laneWidth/2),
+                rainbowRoad[$-1][1]
                      + uniform(state.height/8, state.height/4)];
     	}
     }
