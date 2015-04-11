@@ -1,3 +1,4 @@
+import std.math;
 import std.stdio;
 import std.random;
 import std.c.stdlib;
@@ -117,6 +118,7 @@ bool init(ref State state) {
 }
 
 void update(ref State state) {
+	// moven de cars arong rodd
 	foreach (i,car; state.cars) {
 		if (i < state.cars.length / 2) {
 			car.y += 0.4;
@@ -128,14 +130,23 @@ void update(ref State state) {
 				car.y = state.height + car.h / 2;
 		}
 	}
+
+	// rotten da tings
+	state.rotVal += 0.0003;
 }
 
 void render(ref State state) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	// set perspective transform
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	//gluPerspective(state.FOV_Y, 1. * state.width / state.height, 0.1, 100);
+
 	// set modelview transform
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+	glRotatef(180 * PI * state.rotVal, 1, 0, 0);
 	glTranslatef(-1, 1, 0);
 	glScalef(2. / state.width, -2. / state.height, 1);
 
@@ -150,12 +161,6 @@ void render(ref State state) {
 		fillRect(cast(int)car.x, cast(int)car.y, car.w, car.h);
 	}
 
-	fillRect(0, 0, 10, 10);
-	fillRect(state.width, 0, 10, 10);
-	fillRect(state.width, state.height, 10, 10);
-	fillRect(state.width, state.height, 10, 10);
-
-	// TODO show to screen
 	SDL_GL_SwapWindow(state.window);
 }
 
