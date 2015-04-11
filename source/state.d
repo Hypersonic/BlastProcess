@@ -1,15 +1,24 @@
 import derelict.sdl2.mixer;
+import derelict.sdl2.sdl;
 
 class State {
-	int width = 1000;
-	int height = 1000;
+	int width;
+	int height;
+	double FOV_Y = 90;
 
 	bool running = true;
 
     Mix_Music* music;
+	SDL_Window *window;
+	SDL_GLContext context;
 
 	Guy[] cars;
 	int laneWidth = 250;
+
+	this(int w, int h) {
+		width = w;
+		height = h;
+	}
 };
 
 class Guy {

@@ -4,6 +4,7 @@
 	"copyright": "Copyright © 2015, josh",
 	"authors": ["josh"],
 	"dependencies": {
-        "derelict-sdl2": "~>1.9.4"
+		"derelict-sdl2": "~>1.9.4",
+		"derelict-gl3": "~>1.0.12"
 	}
 }
