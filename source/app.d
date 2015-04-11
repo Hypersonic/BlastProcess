@@ -9,7 +9,7 @@ void main()
 	auto width  = 1000;
 	auto height = 1000;
 
-	GameState state;
+	State state;
 	state.sdl2 = new SDL2(null);
 	auto window = new SDL2Window(state.sdl2,
 		SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
@@ -28,7 +28,7 @@ void main()
 	writeln("quitting; goodbye");
 }
 
-void checkKeys(ref GameState state) {
+void checkKeys(ref State state) {
 	if (state.sdl2.keyboard().isPressed(SDLK_q))
 		state.running = false;
 }
