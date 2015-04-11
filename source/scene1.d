@@ -26,6 +26,8 @@ void init(ref State state) {
 		state.cars ~= new Guy(575 + (1 + lane) / 7. * state.laneWidth,
 		                      uniform01() * state.height, 1, 1, 1);
 	}
+
+    state.rainbowRoad ~= [175 + state.laneWidth/2, 0];
 }
 
 void update(ref State state) {
@@ -44,8 +46,8 @@ void update(ref State state) {
 
 	// extend the rainbow road every TICK_INTERVAL ticks
     if (state.t > 588 && (state.t - 542) % TICK_INTERVAL == 0) {
-        state.rainbowRoad ~= [uniform(0, state.width),
-                              uniform(0, state.height)];
+        state.rainbowRoad ~= [175 + (state.t%2 * state.laneWidth/2).to!int + uniform(0, state.laneWidth/2),
+                              state.rainbowRoad[$-1][1] + uniform(state.height/8, state.height/4)];
     }
 }
 
