@@ -18,6 +18,12 @@ class State {
 	ulong TICK_LEN = 20; // length of a tick (x msecs)
 	ulong t = 0;
 
+	int sceneIndex = -1;
+	int numScenes = 0;
+	void function(ref State)[] initFuncs;
+	void function(ref State)[] updateFuncs;
+	void function(ref State)[] renderFuncs;
+
 	this(int w, int h) {
 		width = w;
 		height = h;

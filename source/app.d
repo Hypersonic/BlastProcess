@@ -1,7 +1,6 @@
 import std.conv;
 import std.math;
 import std.stdio;
-import std.random;
 import std.datetime;
 import std.c.stdlib;
 import core.thread;
@@ -11,6 +10,7 @@ import derelict.sdl2.mixer;
 import derelict.opengl3.gl;
 
 import state;
+import scene1;
 import render_util;
 
 void main()
@@ -24,6 +24,7 @@ void main()
 		exit(-1);
 	}
 
+	nextScene(state);
 	writeln("good init broskis");
 	StopWatch sw;
 
@@ -46,8 +47,8 @@ void main()
 			}
 		}
 
-		update(state);
-		render(state);
+		state.updateFuncs[state.sceneIndex](state);
+		state.renderFuncs[state.sceneIndex](state);
 		sw.stop();
 
 		auto len = sw.peek().length;
@@ -62,25 +63,40 @@ void main()
 }
 
 bool init(ref State state) {
+	if (!initAudio(state)) return false;
+	if (!initVisual(state)) return false;
+
+	state.initFuncs ~= &scene1.init;
+	state.updateFuncs ~= &scene1.update;
+	state.renderFuncs ~= &scene1.render;
+	state.numScenes++;
+
+	return true;
+}
+
+bool initAudio(ref State state) {
     DerelictSDL2.load();
     DerelictSDL2Mixer.load();
 
     // Audio initialization 
     if (Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 ) < 0) {
         writefln( "SDL_mixer could not initialize! SDL_mixer Error: %s", Mix_GetError() );
-        return true;
+        return false;
     }
     state.music = Mix_LoadMUS("res/dragster-5k-047.mp3");
 
     if (!state.music) {
         writefln("Mix_LoadMUS(\"res/dragster-5k-047.mp3\"): %s", Mix_GetError());
-        return true;
+        return false;
     }
 
     Mix_PlayMusic(state.music, 10);
 
+    return true;
+}
+
+bool initVisual(ref State state) {
 	// init sdl2, opengl
-	DerelictSDL2.load();
 	DerelictGL.load();
 
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -107,78 +123,24 @@ bool init(ref State state) {
 
 	DerelictGL.reload();
 
-	// populate left lane
-	for (int i = 0; i < 40; i++) {
-		int lane = cast(int)(uniform01() * 6);
-		state.cars ~= new Guy(175 + (1 + lane) / 7. * state.laneWidth,
-		                      uniform01() * state.height, 1, 1, 1);
-	}
-
-	// populate right lane
-	for (int i = 0; i < 40; i++) {
-		int lane = cast(int)(uniform01() * 6);
-		state.cars ~= new Guy(575 + (1 + lane) / 7. * state.laneWidth,
-		                      uniform01() * state.height, 1, 1, 1);
-	}
-
 	return true;
 }
 
-void update(ref State state) {
-	// moven de cars arong rodd
-	foreach (i,car; state.cars) {
-		if (i < state.cars.length / 2) {
-			car.y += 0.4;
-			if (car.y > state.height + car.h / 2)
-				car.y = -car.h / 2;
-		} else {
-			car.y -= 0.4;
-			if (car.y < -car.h / 2)
-				car.y = state.height + car.h / 2;
-		}
+bool nextScene(ref State state) {
+	// if there's no next scene, return
+	if (state.sceneIndex >= state.numScenes - 1) {
+		state.sceneIndex  = state.numScenes - 1;
+		return false;
 	}
 
-    // Increment t
-	state.t++;
+	state.initFuncs[++state.sceneIndex](state);
+	return true;
 }
 
 auto clamp(T, U, V)(T val, U lower, V upper) {
     if (val < lower) return lower;
     if (val >= upper) return upper;
     return val;
-}
-
-void render(ref State state) {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	// set perspective transform
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	//gluPerspective(state.FOV_Y, 1. * state.width / state.height, 0.1, 100);
-
-	// set modelview transform
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-    auto first_angle = clamp(180 / PI * (state.t * .001), 0, 30);
-    glRotatef(first_angle/4, 0, 0, 1);
-    glRotatef(first_angle, 1, 0, 0);
-    glRotatef(90, 0, 0, 1);
-    glRotatef(90, 0, 1, 0);
-	glTranslatef(-1, 1, 0);
-	glScalef(2. / state.width, -2. / state.height, 1);
-
-	// roads ???
-	glColor3f(0.3, 0.3, 0.3);
-	fillRect(300, 500, state.laneWidth, state.height);
-	fillRect(700, 500, state.laneWidth, state.height);
-
-	// where we're going we don't need roads
-	glColor3f(0.75, 0.75, 0.75);
-	foreach (car; state.cars) {
-		fillRect(cast(int)car.x, cast(int)car.y, car.w, car.h);
-	}
-
-	SDL_GL_SwapWindow(state.window);
 }
 
 void keyboard(ref State state, ref SDL_Event e, bool keydown) {
