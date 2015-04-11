@@ -12,12 +12,6 @@ class State {
 	SDL_Window *window;
 	SDL_GLContext context;
 
-	Guy[] cars;
-	int laneWidth = 250;
-
-
-    int[2][] rainbowRoad;
-
 	ulong TICK_LEN = 30; // length of a tick (x msecs)
 	ulong t = 0;
 
