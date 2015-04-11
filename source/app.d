@@ -6,14 +6,11 @@ import state;
 
 void main()
 {
-	auto width  = 1000;
-	auto height = 1000;
-
 	State state = new State;
 	state.sdl2 = new SDL2(null);
 	auto window = new SDL2Window(state.sdl2,
 		SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-		width, height,
+		state.width, state.height,
 		SDL_WINDOW_SHOWN);
 	state.renderer = new SDL2Renderer(window);
 
