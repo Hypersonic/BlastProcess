@@ -1,4 +1,5 @@
 import std.stdio;
+import std.random;
 
 import gfm.sdl2;
 
@@ -35,7 +36,12 @@ void init(ref State state) {
 		SDL_WINDOW_SHOWN);
 	state.renderer = new SDL2Renderer(window);
 
-	state.cars ~= new Guy(50, 50, 1, 1, 1);
+	for (int i = 0; i < 20; i++) {
+		state.cars ~= new Guy(190 + uniform01() * 220,
+		                      uniform01() * state.height, 1, 1, 1);
+		state.cars ~= new Guy(590 + uniform01() * 220,
+		                      uniform01() * state.height, 1, 1, 1);
+	}
 }
 
 void update(ref State state) {
