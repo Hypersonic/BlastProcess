@@ -9,6 +9,7 @@ class State {
 	SDL2Renderer renderer;
 
 	Guy[] cars;
+	int laneWidth = 250;
 };
 
 class Guy {

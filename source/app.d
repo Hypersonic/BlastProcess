@@ -36,10 +36,12 @@ void init(ref State state) {
 		SDL_WINDOW_SHOWN);
 	state.renderer = new SDL2Renderer(window);
 
-	for (int i = 0; i < 20; i++) {
-		state.cars ~= new Guy(190 + uniform01() * 220,
+	for (int i = 0; i < 40; i++) {
+		int lane = cast(int)(uniform01() * 6);
+		state.cars ~= new Guy(175 + (1/12. + lane / 6.) * state.laneWidth,
 		                      uniform01() * state.height, 1, 1, 1);
-		state.cars ~= new Guy(590 + uniform01() * 220,
+		lane = cast(int)(uniform01() * 6);
+		state.cars ~= new Guy(575 + (1/12. + lane / 6.) * state.laneWidth,
 		                      uniform01() * state.height, 1, 1, 1);
 	}
 }
@@ -54,8 +56,8 @@ void render(ref State state) {
 
 	// roads ???
 	renderer.setColor(80, 80, 80);
-	renderer.fillRect(175, 0, 250, state.height);
-	renderer.fillRect(575, 0, 250, state.height);
+	renderer.fillRect(175, 0, state.laneWidth, state.height);
+	renderer.fillRect(575, 0, state.laneWidth, state.height);
 
 	// where we're going we don't need roads
 	renderer.setColor(200, 200, 200);
