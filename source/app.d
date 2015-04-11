@@ -143,67 +143,6 @@ auto clamp(T, U, V)(T val, U lower, V upper) {
     return val;
 }
 
-<<<<<<< HEAD
-=======
-void render(ref State state) {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	// set perspective transform
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	//gluPerspective(state.FOV_Y, 1. * state.width / state.height, 0.1, 100);
-
-	// set modelview transform
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-    auto first_angle = clamp(180 / PI * (state.t * (PI/3300)), 0, 30);
-    glRotatef(first_angle/4, 0, 0, 1);
-    glRotatef(first_angle, 1, 0, 0);
-    glRotatef(90, 0, 0, 1);
-    glRotatef(90, 0, 1, 0);
-	glTranslatef(-1, 1, 0);
-	glScalef(2. / state.width, -2. / state.height, 1);
-
-	// roads ???
-	glColor3f(0.3, 0.3, 0.3);
-	fillRect(300, 500, state.laneWidth, state.height);
-	fillRect(700, 500, state.laneWidth, state.height);
-
-	// where we're going we don't need roads
-	glColor3f(0.75, 0.75, 0.75);
-	foreach (car; state.cars) {
-		fillRect(cast(int)car.x, cast(int)car.y, car.w, car.h);
-	}
-
-    if (state.t > 600 && state.t % state.TICK_LEN / 2 == 0) {
-        state.rainbowRoad ~= [uniform(0, state.width),
-                              uniform(0, state.height)];
-    }
-    
-    if (state.rainbowRoad.length > 1) {
-        glLineWidth(10.0);
-        import std.range;
-        glBegin(GL_LINES); {
-            foreach (first, second; lockstep(state.rainbowRoad[0 .. $-1], state.rainbowRoad[1 .. $])) {
-                glColor3f(1.0, 0.0, 0.0);
-                glVertex3f(first[0].to!float, first[1].to!float - 10, 0f);
-                glVertex3f(second[0].to!float, second[1].to!float - 10, 0f);
-
-                glColor3f(0.0, 1.0, 0.0);
-                glVertex3f(first[0].to!float, first[1].to!float, 0f);
-                glVertex3f(second[0].to!float, second[1].to!float, 0f);
-
-                glColor3f(0.0, 0.0, 1.0);
-                glVertex3f(first[0].to!float, first[1].to!float + 10, 0f);
-                glVertex3f(second[0].to!float, second[1].to!float + 10, 0f);
-            }
-        } glEnd();
-    }
-
-	SDL_GL_SwapWindow(state.window);
-}
-
->>>>>>> Rainbow road first pass
 void keyboard(ref State state, ref SDL_Event e, bool keydown) {
 	switch (e.key.keysym.sym) {
 		case SDLK_q:
