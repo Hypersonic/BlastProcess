@@ -62,7 +62,7 @@ bool init(ref State state) {
 	DerelictGL.load();
 
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-		writeln("error intializing sdl");
+		writeln("error initalizing sdl");
 		return false;
 	}
 
@@ -88,14 +88,14 @@ bool init(ref State state) {
 	// populate left lane
 	for (int i = 0; i < 40; i++) {
 		int lane = cast(int)(uniform01() * 6);
-		state.cars ~= new Guy(175 + (1/12. + lane / 6.) * state.laneWidth,
+		state.cars ~= new Guy(175 + (1 + lane) / 7. * state.laneWidth,
 		                      uniform01() * state.height, 1, 1, 1);
 	}
 
 	// populate right lane
 	for (int i = 0; i < 40; i++) {
 		int lane = cast(int)(uniform01() * 6);
-		state.cars ~= new Guy(575 + (1/12. + lane / 6.) * state.laneWidth,
+		state.cars ~= new Guy(575 + (1 + lane) / 7. * state.laneWidth,
 		                      uniform01() * state.height, 1, 1, 1);
 	}
 
@@ -119,25 +119,40 @@ void update(ref State state) {
 void render(ref State state) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	// set modelview transform
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	//glTranslatef(-state.width / 2, - state.height / 2, 0);
+	glScalef(2. / state.width, 2. / state.height, 1);
+	glTranslatef(-state.width / 2, -state.height / 2, 0);
+
 	// roads ???
 	glColor3f(0.3, 0.3, 0.3);
-	fillRect(175, 0, state.laneWidth, state.height);
-	fillRect(575, 0, state.laneWidth, state.height);
+	fillRect(300, 500, state.laneWidth, state.height);
+	fillRect(700, 500, state.laneWidth, state.height);
 
 	// where we're going we don't need roads
 	glColor3f(0.75, 0.75, 0.75);
 	foreach (car; state.cars) {
-		fillRect(cast(int)car.x - car.w / 2, cast(int)car.y - car.h / 2,
-		         car.w, car.h);
+		fillRect(cast(int)car.x, cast(int)car.y, car.w, car.h);
 	}
 
+	fillRect(0, 0, 10, 10);
+	fillRect(state.width, 0, 10, 10);
+	fillRect(state.width, state.height, 10, 10);
+	fillRect(state.width, state.height, 10, 10);
+
 	// TODO show to screen
+	SDL_GL_SwapWindow(state.window);
 }
 
 void keyboard(ref State state, ref SDL_Event e, bool keydown) {
 	switch (e.key.keysym.sym) {
 		case SDLK_q:
 			state.running = false;
+			break;
+		default:
+			break;
 	}
 }
 

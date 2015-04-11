@@ -3,6 +3,7 @@ import derelict.sdl2.sdl;
 class State {
 	int width;
 	int height;
+	double FOV_Y = 90;
 
 	bool running = true;
 	SDL_Window *window;
