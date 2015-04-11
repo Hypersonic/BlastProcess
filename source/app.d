@@ -7,12 +7,7 @@ import state;
 void main()
 {
 	State state = new State;
-	state.sdl2 = new SDL2(null);
-	auto window = new SDL2Window(state.sdl2,
-		SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-		state.width, state.height,
-		SDL_WINDOW_SHOWN);
-	state.renderer = new SDL2Renderer(window);
+	init(state);
 
 	// state loop
 	while (state.running) {
@@ -32,6 +27,17 @@ void checkKeys(ref State state) {
 		state.running = false;
 }
 
+void init(ref State state) {
+	state.sdl2 = new SDL2(null);
+	auto window = new SDL2Window(state.sdl2,
+		SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+		state.width, state.height,
+		SDL_WINDOW_SHOWN);
+	state.renderer = new SDL2Renderer(window);
+
+	state.cars ~= new Guy(50, 50, 1, 1, 1);
+}
+
 void update(ref State state) {
 }
 
@@ -40,7 +46,16 @@ void render(ref State state) {
 	renderer.setColor(0, 0, 0);
 	renderer.clear();
 
+	// roads ???
+	renderer.setColor(80, 80, 80);
+	renderer.fillRect(175, 0, 250, state.height);
+	renderer.fillRect(575, 0, 250, state.height);
+
+	// where we're going we don't need roads
 	renderer.setColor(200, 200, 200);
-	renderer.fillRect(10, 10, 10, 10);
+	foreach (car; state.cars) {
+		renderer.fillRect(cast(int)car.x - 5, cast(int)car.y - 5, 10, 10);
+	}
+
 	renderer.present();
 }

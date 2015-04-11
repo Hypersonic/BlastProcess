@@ -7,4 +7,19 @@ class State {
 	bool running = true;
 	SDL2 sdl2;
 	SDL2Renderer renderer;
+
+	Guy[] cars;
+};
+
+class Guy {
+	double x, y;
+	double r, g, b;
+
+	this(double x, double y, double r, double g, double b) {
+		this.x = x;
+		this.y = y;
+		this.r = r;
+		this.g = g;
+		this.b = b;
+	}
 };
