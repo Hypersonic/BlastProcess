@@ -40,7 +40,6 @@ void main()
 			}
 		}
 
-		checkKeys(state);
 		update(state);
 		render(state);
 	}
@@ -49,9 +48,6 @@ void main()
 
 	// ciao!
 	writeln("quitting; goodbye");
-}
-
-void checkKeys(ref State state) {
 }
 
 bool init(ref State state) {
