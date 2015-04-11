@@ -15,7 +15,7 @@ class State {
 	Guy[] cars;
 	int laneWidth = 250;
 
-	double rotVal = 0;
+	ulong t = 0;
 
 	this(int w, int h) {
 		width = w;

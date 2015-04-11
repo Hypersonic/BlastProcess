@@ -131,8 +131,14 @@ void update(ref State state) {
 		}
 	}
 
-	// rotten da tings
-	state.rotVal += 0.0003;
+    // Increment t
+	state.t++;
+}
+
+auto clamp(T, U, V)(T val, U lower, V upper) {
+    if (val < lower) return lower;
+    if (val >= upper) return upper;
+    return val;
 }
 
 void render(ref State state) {
@@ -146,7 +152,11 @@ void render(ref State state) {
 	// set modelview transform
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	glRotatef(180 * PI * state.rotVal, 1, 0, 0);
+    auto first_angle = clamp(180 / PI * (state.t * .001), 0, 30);
+    glRotatef(first_angle/4, 0, 0, 1);
+    glRotatef(first_angle, 1, 0, 0);
+    glRotatef(90, 0, 0, 1);
+    glRotatef(90, 0, 1, 0);
 	glTranslatef(-1, 1, 0);
 	glScalef(2. / state.width, -2. / state.height, 1);
 
