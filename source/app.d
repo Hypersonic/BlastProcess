@@ -135,6 +135,10 @@ void render(ref State state) {
 }
 
 void keyboard(ref State state, ref SDL_Event e, bool keydown) {
+	switch (e.key.keysym.sym) {
+		case SDLK_q:
+			state.running = false;
+	}
 }
 
 void cleanup(ref State state) {
