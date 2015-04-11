@@ -29,6 +29,7 @@ void checkKeys(ref State state) {
 }
 
 void init(ref State state) {
+	// init sdl2, etc.
 	state.sdl2 = new SDL2(null);
 	auto window = new SDL2Window(state.sdl2,
 		SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
@@ -36,12 +37,14 @@ void init(ref State state) {
 		SDL_WINDOW_SHOWN);
 	state.renderer = new SDL2Renderer(window);
 
+	// populate left lane
 	for (int i = 0; i < 40; i++) {
 		int lane = cast(int)(uniform01() * 6);
 		state.cars ~= new Guy(175 + (1/12. + lane / 6.) * state.laneWidth,
 		                      uniform01() * state.height, 1, 1, 1);
 	}
 
+	// populate right lane
 	for (int i = 0; i < 40; i++) {
 		int lane = cast(int)(uniform01() * 6);
 		state.cars ~= new Guy(575 + (1/12. + lane / 6.) * state.laneWidth,
