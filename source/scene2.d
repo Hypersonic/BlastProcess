@@ -93,7 +93,7 @@ void render(ref State state) {
 
     glLineWidth(10.0);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	glColor3f(1, 0, 0);
+	glColor3f(0.9, 0.7, 0.2);
 	glBegin(GL_TRIANGLES);
 	foreach (tri; 0..4) {
 		foreach (vert; 0..3) {
