@@ -10,7 +10,7 @@ import derelict.opengl3.gl;
 import state;
 import render_util;
 
-int TAP_START_TICK = 606;
+int TAP_START_TICK = 632;
 int TAP_INTERVAL = 26;
 int RAINBOW_ROAD_MAXLEN = 9;
 
