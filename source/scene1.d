@@ -60,6 +60,8 @@ void update(ref State state) {
                      + uniform(0, laneWidth/2),
                 rainbowRoad[$-1][1] + state.height/ (RAINBOW_ROAD_MAXLEN-1)];
     	}
+    } else {
+    	state.nextScene();
     }
 }
 
