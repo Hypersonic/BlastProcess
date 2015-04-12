@@ -85,6 +85,7 @@ void render(ref State state) {
 
 	// render the tetrahedron
 	glLoadIdentity();
+	glTranslatef(0, 0.001 * rainbow[$ - 1], 0);
 	glRotatef(-20, 0, 0, 1);
 	glRotatef(180 / PI * tetraRot, 0, 1, 0);
 	glTranslatef(0, -0.3, 0);
