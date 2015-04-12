@@ -11,6 +11,7 @@ import derelict.opengl3.gl;
 
 import state;
 static import scene1;
+static import scene2;
 import render_util;
 
 void main()
@@ -74,6 +75,11 @@ bool init(ref State state) {
 	state.initFuncs ~= &scene1.init;
 	state.updateFuncs ~= &scene1.update;
 	state.renderFuncs ~= &scene1.render;
+	state.numScenes++;
+
+	state.initFuncs ~= &scene2.init;
+	state.updateFuncs ~= &scene2.update;
+	state.renderFuncs ~= &scene2.render;
 	state.numScenes++;
 
 	return true;
