@@ -15,7 +15,12 @@ int[] tetraTriPtrs = [
 	0, 1, 2
 ];
 
-double rot = 0;
+double tetraRot = 0;
+
+double[2][] rainbow = [
+	[-1000, 0],
+	[-200, 0]
+];
 
 void init(ref State state) {
 	tetraVerts = genTetraVerts();
@@ -34,20 +39,41 @@ double[] genTetraVerts() {
 }
 
 void update(ref State state) {
-	rot += 0.03;
+	tetraRot += 0.03;
 }
 
 void render(ref State state) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glMatrixMode(GL_MODELVIEW);
+
+	// render the rainbow trail
+	glLoadIdentity();
+	glTranslatef(0, -0.2, 0);
+	glScalef(1./state.width, 1./state.height, 1);
+
+    auto height = 100;
+    glColor3f(1.0, 0.0, 0.0);
+    fillRectTl(rainbow[0][0], rainbow[0][1] - height - height/2,
+               rainbow[1][0] - rainbow[0][0], height);
+
+    glColor3f(0.0, 1.0, 0.0);
+    fillRectTl(rainbow[0][0], rainbow[0][1] - height/2,
+               rainbow[1][0] - rainbow[0][0], height);
+
+    glColor3f(0.0, 0.0, 1.0);
+    fillRectTl(rainbow[0][0], rainbow[0][1] + height - height/2,
+               rainbow[1][0] - rainbow[0][0], height);
+
+
+	// render the tetrahedron
 	glLoadIdentity();
 	glRotatef(-20, 0, 0, 1);
-	glRotatef(180 / PI * rot, 0, 1, 0);
+	glRotatef(180 / PI * tetraRot, 0, 1, 0);
 	glTranslatef(0, -0.3, 0);
 	glScalef(0.25, 0.25, 0.25);
 
-	// render the tetrahedron
+    glLineWidth(10.0);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glColor3f(1, 0, 0);
 	glBegin(GL_TRIANGLES);
